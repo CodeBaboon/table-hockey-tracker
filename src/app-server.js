@@ -22,7 +22,7 @@ function *home() {
 	yield this.render('home');
 }
 
-const server = app.listen(process.env.PORT || 3000, 'vlm1-dharris', () => {
+const server = app.listen(process.env.PORT || 3000, () => {
 	const {address, port} = server.address();
 	console.log(`Example app listening at http://${address}:${port}`);
 });
