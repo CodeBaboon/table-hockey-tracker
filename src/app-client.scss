@@ -1,0 +1,27 @@
+@import "node_modules/vui-typography/typography.scss";
+@import "node_modules/vui-typography/headings.scss";
+@import "node_modules/vui-grid-system/grid-system.scss";
+@import './views/home.scss';
+
+body {
+    @include vui-typography();
+    @include vui-gs-container();
+    max-width: 1200px;
+    margin: 0 40px;
+}
+
+h1 {
+    @include vui-typography-heading1();
+}
+
+h2 {
+    @include vui-typography-heading2();
+}
+
+h3 {
+    @include vui-typography-heading3();
+}
+
+h4 {
+    @include vui-typography-heading4();
+}

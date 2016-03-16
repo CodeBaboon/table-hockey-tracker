@@ -1,0 +1,62 @@
+{
+  "name": "d2l-table-hockey-tracker",
+  "version": "1.0.0",
+  "description": "Track and display results for D2L Winnipeg table hockey games",
+  "main": "app.js",
+  "scripts": {
+    "prebuild": "rimraf ./dist && mkdirp ./dist && mkdirp ./dist/api && mkdirp ./dist/lib && mkdirp ./dist/views && mkdirp ./dist/static && cp ./src/views/* ./dist/views/ && cp ./src/app-server.js ./dist/app-server.js && cp ./src/api/* ./dist/api/ && cp ./src/lib/* ./dist/lib/",
+    "build:client": "browserify src/app-client.js -o dist/static/app-client.js && node-sass src/app-client.scss dist/static/app-client.css",
+    "build": "npm run build:client",
+    "start:build": "npm run build",
+    "start:execute": "PORT=3099 node_modules/nodemon/bin/nodemon.js -- node_modules/babel-cli/bin/babel-node.js dist/app-server.js",
+    "start": "npm run start:build && npm run start:execute",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dave Harris",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^1.1.2",
+    "koa-mount": "^1.3.0",
+    "koa-route": "^2.4.2",
+    "koa-static": "^2.0.0",
+    "koa-views": "^4.0.1",
+    "mustache": "^2.2.1",
+    "q": "^1.4.1",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "superagent": "^1.8.1",
+    "vui-grid-system": "0.0.1",
+    "vui-typography": "^2.0.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.1.4",
+    "babel-eslint": "^5.0.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.1.4",
+    "babel-preset-es2015": "^6.1.4",
+    "babel-preset-react": "^6.5.0",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
+    "mkdirp": "^0.5.1",
+    "node-sass": "^3.4.2",
+    "nodemon": "^1.8.1",
+    "rimraf": "^2.5.2"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015",
+            "react"
+          ]
+        }
+      ]
+    ]
+  }
+}
