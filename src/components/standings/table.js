@@ -17,7 +17,8 @@ class StandingsTable extends React.Component {
 
 		return (
 			<div>
-				<table>
+				<table summary="Wins, losses, and other overall summary data related to player matches">
+					<caption>Overall Standings</caption>
 					<thead>
 						<tr>
 							<th>Player</th>

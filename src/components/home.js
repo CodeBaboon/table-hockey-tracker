@@ -5,11 +5,15 @@ class Home extends React.Component {
 
 	render() {
 		return (
-      <main>
-        <h1>D2L Table Hockey</h1>
-		<Standings {...this.props} />
-      </main>
-    );
+			<div>
+				<header>
+					<h1>D2L Table Hockey</h1>
+				</header>
+				<main>
+					<Standings {...this.props} />
+				</main>
+			</div>
+    	);
 	}
 }
 
