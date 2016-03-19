@@ -1,13 +1,16 @@
 import koa from 'koa';
+import bodyparser from 'koa-bodyparser';
 import route from 'koa-route';
 import mount from 'koa-mount';
 import serve from 'koa-static'
 import views from 'koa-views';
 import pg from 'koa-pg';
 import Standings from './api/standings';
+import Matches from './api/matches';
 
 const app = koa();
 
+app.use(bodyparser());
 app.use(mount('/static', serve(__dirname + '/static')));
 
 app.use(views(__dirname + '/views', {
@@ -22,7 +25,9 @@ app.use(pg({
 }));
 
 app.use(route.get('/', home));
-app.use(route.get('/api/standings/', Standings.list))
+app.use(route.get('/api/standings/', Standings.list));
+app.use(route.get('/api/matches/', Matches.list));
+app.use(route.post('/api/matches/', Matches.add));
 
 function *home() {
 	yield this.render('home');
