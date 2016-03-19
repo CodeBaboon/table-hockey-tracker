@@ -3,6 +3,7 @@ import route from 'koa-route';
 import mount from 'koa-mount';
 import serve from 'koa-static'
 import views from 'koa-views';
+import pg from 'koa-pg';
 import Standings from './api/standings';
 
 const app = koa();
@@ -13,6 +14,11 @@ app.use(views(__dirname + '/views', {
   map: {
     html: 'mustache'
   }
+}));
+
+app.use(pg({
+    name: 'db',
+    conStr: process.env.DATABASE_URL
 }));
 
 app.use(route.get('/', home));
