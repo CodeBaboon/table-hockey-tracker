@@ -1,7 +1,7 @@
 import React from 'react';
-import StandingsTable from './standings/table';
+import StandingsTable from './table';
 import request from 'superagent';
-import { promisify } from '../lib/promisify';
+import { promisify } from '../../lib/promisify';
 
 class Standings extends React.Component {
 

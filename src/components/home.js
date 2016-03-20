@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import Standings from './standings';
+import Standings from './standings/index';
 
 class Home extends React.Component {
 
