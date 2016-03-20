@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import Record from './record';
 
 class StandingsTable extends React.Component {
@@ -13,6 +14,15 @@ class StandingsTable extends React.Component {
 
 		if (!data || !data.records) {
 			return <div><p>loading...</p></div>;
+		}
+
+		if (data.records.length < 1) {
+			return (
+				<div>
+					<h2>No standings to display</h2>
+					<p>You know nothing, Jon Snow. Play the game of thr--- uhh, table hockey, then <Link to="matches/add">add some results</Link>.</p>
+				</div>
+			);
 		}
 
 		return (

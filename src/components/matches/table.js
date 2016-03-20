@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import Record from './record';
 
 class MatchesTable extends React.Component {
@@ -13,6 +14,15 @@ class MatchesTable extends React.Component {
 
 		if (!data || !data.records) {
 			return <div><p>loading...</p></div>;
+		}
+
+		if (data.records.length < 1) {
+			return (
+				<div>
+					<h2>No match results to display</h2>
+					<p>Maybe you should get playing and then <Link to="matches/add">add one</Link>?</p>
+				</div>
+			);
 		}
 
 		return (
