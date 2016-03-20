@@ -24,10 +24,10 @@ app.use(pg({
     conStr: process.env.DATABASE_URL
 }));
 
-app.use(route.get('/', home));
 app.use(route.get('/api/standings/', Standings.list));
 app.use(route.get('/api/matches/', Matches.list));
 app.use(route.post('/api/matches/', Matches.add));
+app.use(route.get('*', home));
 
 function *home() {
 	yield this.render('home');

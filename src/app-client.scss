@@ -1,6 +1,11 @@
 @import "node_modules/vui-typography/typography.scss";
 @import "node_modules/vui-typography/headings.scss";
 @import "node_modules/vui-grid-system/grid-system.scss";
+@import 'node_modules/vui-input/input.scss';
+@import "node_modules/vui-input/input-checkbox.scss";
+@import "node_modules/vui-input/select.scss";
+@import "node_modules/vui-button/button.scss";
+
 @import './views/home.scss';
 
 body {
@@ -24,4 +29,34 @@ h3 {
 
 h4 {
     @include vui-typography-heading4();
+}
+
+button,
+input[type="button"] {
+    @include vui-button();
+}
+
+button.primary {
+    @include vui-button-primary();
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"] {
+    @include vui-input();
+}
+
+input[type="checkbox"] {
+    @include vui-input-checkbox();
+}
+
+.checkbox-label {
+    @include vui-input-checkbox-label();
+}
+
+select {
+    @include vui-input-select();
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
