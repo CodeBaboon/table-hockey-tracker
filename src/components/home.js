@@ -11,6 +11,7 @@ class Home extends React.Component {
 					<h1>D2L Table Hockey</h1>
 					<nav>
 						<ul>
+							<li><Link to="matches">View match results</Link></li>
 							<li><Link to="matches/add">Add match result</Link></li>
 						</ul>
 					</nav>

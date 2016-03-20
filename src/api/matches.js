@@ -34,12 +34,14 @@ class Matches {
 		if (!isValidMatchResult(match)) {
 			this.throw('Invalid request data', 400);
 		} else {
+            const overtime = match.overtime || false;
+            const played_on = match.played_on || getCurrentDate();
 			const queryCols = `INSERT INTO match_results(home_player, home_score
 								, away_player, away_score, overtime, played_on)`;
 			const queryVals = `VALUES('${match.home_player}', ${match.home_score}
 								, '${match.away_player}', ${match.away_score}
-								, ${match.overtime || false}
-								, '${match.played_on || getCurrentDate()}')`;
+								, '${overtime}'
+								, '${played_on}')`;
 
 			const result = yield this.pg.db.client.query_(`${queryCols} ${queryVals}`);
 			if (!result) {

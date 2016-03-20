@@ -44,8 +44,12 @@
     "rimraf": "^2.5.2",
     "superagent": "^1.8.1",
     "vui-button": "^1.2.1",
+    "vui-colors": "^0.2.0",
+    "vui-field": "^1.0.0",
     "vui-grid-system": "0.0.1",
     "vui-input": "^1.5.5",
+    "vui-link": "^1.1.1",
+    "vui-table": "0.0.10",
     "vui-typography": "^2.0.2"
   },
   "devDependencies": {

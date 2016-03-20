@@ -5,6 +5,8 @@
 @import "node_modules/vui-input/input-checkbox.scss";
 @import "node_modules/vui-input/select.scss";
 @import "node_modules/vui-button/button.scss";
+@import 'node_modules/vui-link/link.scss';
+@import 'node_modules/vui-field/field.scss';
 
 @import './views/home.scss';
 
@@ -29,6 +31,10 @@ h3 {
 
 h4 {
     @include vui-typography-heading4();
+}
+
+a {
+    @include vui-link();
 }
 
 button,
@@ -59,4 +65,16 @@ select {
     @include vui-input-select();
     -webkit-appearance: none;
     -moz-appearance: none;
+}
+
+.field-row {
+    @include vui-field-row();
+}
+
+.field-label {
+    @include vui-field-label();
+}
+
+.field-label-required {
+    @include vui-field-label-required();
 }

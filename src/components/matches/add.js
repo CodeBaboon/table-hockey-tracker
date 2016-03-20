@@ -54,6 +54,7 @@ class AddMatchResult extends React.Component {
 		const self = this;
 		self.validate()
 			.then((validationResults) => {
+				console.log('validationResults are ', validationResults);
 				if (validationResults.every(result => result.isValid)) {
 					request.post('/api/matches')
 							.send(self.getInputData())
@@ -97,10 +98,14 @@ class AddMatchResult extends React.Component {
 		return (
 			<div>
 				<h1>Add a match result</h1>
-				<label>Home player
-					<Forms.Select ref="homePlayerInput"
+				<div className="field-row">
+					<label className="field-label field-label-required" for="hpSelect">
+						Home player
+					</label>
+					<Forms.Select id="hpSelect" ref="homePlayerInput"
 						value={self.state.home_player}
 						onChange={self.handleHomePlayerChange.bind(self)}
+						required aria-required="true"
 						validators={ Forms.Validators.required('Home player is required') }
 					>
 						<option value={null}></option>
@@ -110,22 +115,30 @@ class AddMatchResult extends React.Component {
 						})
 					}
 					</Forms.Select>
-				</label>
-				<label>Home score
-	                <Forms.Input type="text" ref="homeScoreInput"
+				</div>
+				<div className="field-row">
+					<label className="field-label field-label-required" for="hsInput">
+						Home score
+		            </label>
+					<Forms.Input type="text" id="hsInput" ref="homeScoreInput"
 						value={self.state.home_score}
 						onChange={self.handleHomeScoreChange.bind(self)}
+						required aria-required="true"
 						validators={ Forms.Validators.required('Home score is required'),
-				                    Forms.Validators.patternMatch(
-				                        /^\d+$/,
-				                        'Score must be a number'
-				                    ) }
-						/>
-	            </label>
-				<label>Away player
-					<Forms.Select ref="awayPlayerInput"
+									Forms.Validators.patternMatch(
+										/^\d+$/,
+										'Score must be a number'
+									) }
+					/>
+				</div>
+				<div className="field-row">
+					<label className="field-label field-label-required" for="apSelect">
+						Away player
+					</label>
+					<Forms.Select ref="awayPlayerInput" id="apSelect"
 						value={self.state.away_player}
 						onChange={self.handleAwayPlayerChange.bind(self)}
+						required aria-required="true"
 						validators={ Forms.Validators.required('Away player is required') }
 					>
 						<option value={null}></option>
@@ -135,24 +148,30 @@ class AddMatchResult extends React.Component {
 						})
 					}
 					</Forms.Select>
-				</label>
-				<label>Away score
-	                <Forms.Input type="text" ref="awayScoreInput"
+				</div>
+				<div className="field-row">
+					<label className="field-label field-label-required" for="asInput">
+						Away score
+		            </label>
+					<Forms.Input type="text" id="asInput" ref="awayScoreInput"
 						value={self.state.away_score}
 						onChange={self.handleAwayScoreChange.bind(self)}
+						required aria-required="true"
 						validators={ Forms.Validators.required('Away score is required'),
-				                    Forms.Validators.patternMatch(
-				                        /^\d+$/,
-				                        'Score must be a number'
-				                    ) }
-						/>
-	            </label>
-				<label className="checkbox-label">
-				    <input type="checkbox"
-						value={self.state.overtime}
-						onChange={self.handleOvertimeChange.bind(self)}
-					/>Overtime
-				</label>
+									Forms.Validators.patternMatch(
+										/^\d+$/,
+										'Score must be a number'
+									) }
+					/>
+				</div>
+				<div className="field-row">
+					<label className="checkbox-label">
+					    <input type="checkbox"
+							value={self.state.overtime}
+							onChange={self.handleOvertimeChange.bind(self)}
+						/>Overtime
+					</label>
+				</div>
 				<button className="primary" onClick={self.addResult.bind(self)}>Add</button>
 				<p>{self.state.responseData}</p>
 			</div>

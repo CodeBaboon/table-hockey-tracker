@@ -1,0 +1,14 @@
+@import "node_modules/vui-colors/colors.scss";
+
+table {
+	td {
+		span.winner {
+			padding-left: 0.3rem;
+			color: $vui-color-olivine;
+		}
+		span.loser {
+			padding-left: 0.3rem;
+			color: $vui-color-cinnabar;
+		}
+	}
+}
