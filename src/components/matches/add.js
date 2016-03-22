@@ -26,7 +26,8 @@ class AddMatchResult extends React.Component {
 			'Joel',
 			'Jeff',
 			'Dave',
-			'Adam'
+			'Adam',
+			'Suneet'
 		];
 	}
 
