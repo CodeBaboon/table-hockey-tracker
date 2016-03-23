@@ -49,25 +49,6 @@ CREATE TABLE match_results (
 
 
 --
--- Name: match_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE match_results_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: match_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE match_results_id_seq OWNED BY match_results.id;
-
-
---
 -- Name: match_results_view; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -91,6 +72,33 @@ CREATE VIEW match_results_view AS
 
 
 --
+-- Name: goal_summary_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW goal_summary_view AS
+ SELECT COALESCE(home_summary.player, away_summary.player) AS player,
+    COALESCE(home_summary.home_gf, (0)::bigint) AS home_goals_for,
+    COALESCE(home_summary.home_ga, (0)::bigint) AS home_goals_against,
+    (COALESCE(home_summary.home_gf, (0)::bigint) - COALESCE(home_summary.home_ga, (0)::bigint)) AS home_diff,
+    COALESCE(away_summary.away_gf, (0)::bigint) AS away_goals_for,
+    COALESCE(away_summary.away_ga, (0)::bigint) AS away_goals_against,
+    (COALESCE(away_summary.away_gf, (0)::bigint) - COALESCE(away_summary.away_ga, (0)::bigint)) AS away_diff,
+    (COALESCE(home_summary.home_gf, (0)::bigint) + COALESCE(away_summary.away_gf, (0)::bigint)) AS total_goals_for,
+    (COALESCE(home_summary.home_ga, (0)::bigint) + COALESCE(away_summary.away_ga, (0)::bigint)) AS total_goals_against,
+    ((COALESCE(home_summary.home_gf, (0)::bigint) + COALESCE(away_summary.away_gf, (0)::bigint)) - (COALESCE(home_summary.home_ga, (0)::bigint) + COALESCE(away_summary.away_ga, (0)::bigint))) AS total_diff
+   FROM (( SELECT match_results_view.home_player AS player,
+            sum(match_results_view.home_score) AS home_gf,
+            sum(match_results_view.away_score) AS home_ga
+           FROM match_results_view
+          GROUP BY match_results_view.home_player) home_summary
+     FULL JOIN ( SELECT match_results_view.away_player AS player,
+            sum(match_results_view.away_score) AS away_gf,
+            sum(match_results_view.home_score) AS away_ga
+           FROM match_results_view
+          GROUP BY match_results_view.away_player) away_summary ON ((home_summary.player = away_summary.player)));
+
+
+--
 -- Name: standings_view; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -100,16 +108,76 @@ CREATE VIEW standings_view AS
             WHEN (win_summary.winner IS NOT NULL) THEN win_summary.winner
             ELSE loss_summary.loser
         END AS player,
+    (COALESCE(win_summary.wins, (0)::bigint) + COALESCE(loss_summary.losses, (0)::bigint)) AS games_played,
     COALESCE(win_summary.wins, (0)::bigint) AS wins,
-    COALESCE(loss_summary.losses, (0)::bigint) AS losses
+    COALESCE(win_summary.ot_wins, (0)::bigint) AS ot_wins,
+    COALESCE(loss_summary.losses, (0)::bigint) AS losses,
+    COALESCE(loss_summary.ot_losses, (0)::bigint) AS ot_losses,
+    round((((COALESCE(win_summary.wins, (0)::bigint))::numeric * 1.0) / ((COALESCE(win_summary.wins, (0)::bigint) + COALESCE(loss_summary.losses, (0)::bigint)))::numeric), 2) AS win_percentage
    FROM (( SELECT match_results_view.winner,
-            count(*) AS wins
+            count(*) AS wins,
+            sum(
+                CASE match_results_view.overtime
+                    WHEN true THEN 1
+                    ELSE 0
+                END) AS ot_wins
            FROM match_results_view
           GROUP BY match_results_view.winner) win_summary
      FULL JOIN ( SELECT match_results_view.loser,
-            count(*) AS losses
+            count(*) AS losses,
+            sum(
+                CASE match_results_view.overtime
+                    WHEN true THEN 1
+                    ELSE 0
+                END) AS ot_losses
            FROM match_results_view
-          GROUP BY match_results_view.loser) loss_summary ON ((win_summary.winner = loss_summary.loser)));
+          GROUP BY match_results_view.loser) loss_summary ON ((win_summary.winner = loss_summary.loser)))
+  ORDER BY (round((((COALESCE(win_summary.wins, (0)::bigint))::numeric * 1.0) / ((COALESCE(win_summary.wins, (0)::bigint) + COALESCE(loss_summary.losses, (0)::bigint)))::numeric), 2)) DESC, COALESCE(win_summary.wins, (0)::bigint) DESC, COALESCE(loss_summary.losses, (0)::bigint);
+
+
+--
+-- Name: detailed_standings_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW detailed_standings_view AS
+ SELECT standings_view.player,
+    standings_view.games_played,
+    standings_view.wins,
+    standings_view.ot_wins,
+    standings_view.losses,
+    standings_view.ot_losses,
+    standings_view.win_percentage,
+    goal_summary_view.total_goals_for,
+    goal_summary_view.total_goals_against,
+    goal_summary_view.total_diff AS total_goals_diff,
+    goal_summary_view.home_goals_for,
+    goal_summary_view.home_goals_against,
+    goal_summary_view.home_diff AS home_goals_diff,
+    goal_summary_view.away_goals_for,
+    goal_summary_view.away_goals_against,
+    goal_summary_view.away_diff AS away_goals_diff
+   FROM (standings_view standings_view
+     JOIN goal_summary_view ON ((standings_view.player = goal_summary_view.player)))
+  ORDER BY standings_view.win_percentage DESC, standings_view.wins DESC, standings_view.losses, goal_summary_view.total_diff DESC;
+
+
+--
+-- Name: match_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE match_results_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: match_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE match_results_id_seq OWNED BY match_results.id;
 
 
 --
