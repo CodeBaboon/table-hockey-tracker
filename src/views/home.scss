@@ -2,10 +2,20 @@
 @import "node_modules/vui-table/table.scss";
 @import "../components/matches/matches.scss";
 
+$mobileScreenWidth: 767px;
+
 table {
 	@include vui-table();
 
 	caption {
 		text-align: left;
+	}
+}
+
+@media screen and (max-device-width: $mobileScreenWidth), screen and (max-width: $mobileScreenWidth) {
+
+	th.detailed-info,
+	td.detailed-info {
+		display: none;
 	}
 }

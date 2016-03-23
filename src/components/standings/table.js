@@ -32,8 +32,13 @@ class StandingsTable extends React.Component {
 					<thead>
 						<tr>
 							<th>Player</th>
+							<th>GP</th>
 							<th>Wins</th>
 							<th>Losses</th>
+							<th className='detailed-info'>Win %</th>
+							<th className='detailed-info'>GF</th>
+							<th className='detailed-info'>GA</th>
+							<th className='detailed-info'>Diff</th>
 						</tr>
 					</thead>
 					<tbody>
