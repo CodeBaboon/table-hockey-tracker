@@ -10,17 +10,18 @@ class AddMatchResult extends React.Component {
 		super(props);
 		this.state = {
 			players: [],
-			home_player: null,
+			home_player: ``,
 			home_score: null,
-			away_player: null,
+			away_player: ``,
 			away_score: null,
-			overtime: null,
+			overtime: false,
 			played_on: null
 		};
 	}
 
 	getPlayers() {
 		return [
+			'',
 			'Christian',
 			'Bob',
 			'Joel',
@@ -44,7 +45,6 @@ class AddMatchResult extends React.Component {
 
 	validate() {
 		const self = this;
-
 		return Q.all([self.refs.homePlayerInput.validate(),
 				self.refs.homeScoreInput.validate(),
 				self.refs.awayPlayerInput.validate(),
@@ -55,7 +55,6 @@ class AddMatchResult extends React.Component {
 		const self = this;
 		self.validate()
 			.then((validationResults) => {
-				console.log('validationResults are ', validationResults);
 				if (validationResults.every(result => result.isValid)) {
 					request.post('/api/matches')
 							.send(self.getInputData())
@@ -63,7 +62,15 @@ class AddMatchResult extends React.Component {
 							.use(promisify)
 							.promise()
 							.then(function(response) {
-								self.setState({ responseData: response.text });
+								self.setState({
+									home_player: ``,
+									home_score: null,
+									away_player: ``,
+									away_score: null,
+									overtime: false,
+									played_on: null,
+									responseData: response.text
+								});
 							});
 				}
 			});
@@ -86,7 +93,7 @@ class AddMatchResult extends React.Component {
 	}
 
 	handleOvertimeChange(event) {
-		this.setState({overtime: event.target.value});
+		this.setState({overtime: event.target.checked});
 	}
 
 	componentWillMount() {
@@ -109,7 +116,7 @@ class AddMatchResult extends React.Component {
 						required aria-required="true"
 						validators={ Forms.Validators.required('Home player is required') }
 					>
-						<option value={null}></option>
+						<option value={``}></option>
 					{
 						self.state.players.map((player, index) => {
 							return <option key={`hp${index}`} value={player}>{player}</option>;
@@ -121,7 +128,7 @@ class AddMatchResult extends React.Component {
 					<label className="field-label field-label-required" for="hsInput">
 						Home score
 		            </label>
-					<Forms.Input type="text" id="hsInput" ref="homeScoreInput"
+					<Forms.Input type="number" id="hsInput" ref="homeScoreInput"
 						value={self.state.home_score}
 						onChange={self.handleHomeScoreChange.bind(self)}
 						required aria-required="true"
@@ -142,7 +149,7 @@ class AddMatchResult extends React.Component {
 						required aria-required="true"
 						validators={ Forms.Validators.required('Away player is required') }
 					>
-						<option value={null}></option>
+						<option value={``}></option>
 					{
 						self.state.players.map((player, index) => {
 							return <option key={`ap${index}`} value={player}>{player}</option>;
@@ -154,7 +161,7 @@ class AddMatchResult extends React.Component {
 					<label className="field-label field-label-required" for="asInput">
 						Away score
 		            </label>
-					<Forms.Input type="text" id="asInput" ref="awayScoreInput"
+					<Forms.Input type="number" id="asInput" ref="awayScoreInput"
 						value={self.state.away_score}
 						onChange={self.handleAwayScoreChange.bind(self)}
 						required aria-required="true"
@@ -168,7 +175,7 @@ class AddMatchResult extends React.Component {
 				<div className="field-row">
 					<label className="checkbox-label">
 					    <input type="checkbox"
-							value={self.state.overtime}
+							checked={self.state.overtime}
 							onChange={self.handleOvertimeChange.bind(self)}
 						/>Overtime
 					</label>
