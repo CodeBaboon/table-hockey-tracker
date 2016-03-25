@@ -68,7 +68,8 @@ CREATE VIEW match_results_view AS
             WHEN (match_results.home_score < match_results.away_score) THEN match_results.home_player
             ELSE match_results.away_player
         END AS loser
-   FROM match_results;
+   FROM match_results
+   ORDER BY match_results.played_on DESC, match_results.id DESC;
 
 
 --
@@ -208,4 +209,3 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
-
