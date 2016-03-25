@@ -10,9 +10,9 @@ class AddMatchResult extends React.Component {
 		super(props);
 		this.state = {
 			players: [],
-			home_player: ``,
+			home_player: null,
 			home_score: null,
-			away_player: ``,
+			away_player: null,
 			away_score: null,
 			overtime: false,
 			played_on: null
@@ -21,7 +21,6 @@ class AddMatchResult extends React.Component {
 
 	getPlayers() {
 		return [
-			'',
 			'Christian',
 			'Bob',
 			'Joel',
@@ -48,7 +47,34 @@ class AddMatchResult extends React.Component {
 		return Q.all([self.refs.homePlayerInput.validate(),
 				self.refs.homeScoreInput.validate(),
 				self.refs.awayPlayerInput.validate(),
-				self.refs.awayScoreInput.validate()]);
+				self.refs.awayScoreInput.validate(),
+				self.refs.overtimeInput.validate()]);
+	}
+
+	playerNamesMustBeUnique(component, value) {
+		return {
+			isValid: this.refs.homePlayerInput.getValue() !== this.refs.awayPlayerInput.getValue(),
+			message: `Home and Away players must be different values`
+		};
+	}
+
+	scoresMustBeUnique(component, value) {
+		return {
+			isValid: this.refs.homeScoreInput.getValue() !== this.refs.awayScoreInput.getValue(),
+			message: `The scores must be different values (no ties, play some overtime)`
+		};
+	}
+
+	overtimeRangeRestriction(component, value) {
+		const homeScore = this.refs.homeScoreInput.getValue();
+		const awayScore = this.refs.awayScoreInput.getValue();
+		const overtime = document.querySelector('#otInput:checked');
+		const isValid = !overtime || (homeScore && awayScore && Math.abs(homeScore - awayScore) <= 1);
+
+		return {
+			isValid: isValid,
+			message: `Overtime is not valid when score differential is greater than 1`
+		};
 	}
 
 	addResult() {
@@ -114,7 +140,15 @@ class AddMatchResult extends React.Component {
 						value={self.state.home_player}
 						onChange={self.handleHomePlayerChange.bind(self)}
 						required aria-required="true"
-						validators={ Forms.Validators.required('Home player is required') }
+						validators={[
+							Forms.Validators.required(
+								'Home player is required',
+								{
+							        whitespace: Forms.Validators.whitespaceOptions.TRIM
+							    }
+							),
+							self.playerNamesMustBeUnique.bind(self)
+						]}
 					>
 						<option value={``}></option>
 					{
@@ -128,15 +162,18 @@ class AddMatchResult extends React.Component {
 					<label className="field-label field-label-required" for="hsInput">
 						Home score
 		            </label>
-					<Forms.Input type="number" id="hsInput" ref="homeScoreInput"
+					<Forms.Input type="number" min="0" id="hsInput" ref="homeScoreInput"
 						value={self.state.home_score}
 						onChange={self.handleHomeScoreChange.bind(self)}
 						required aria-required="true"
-						validators={ Forms.Validators.required('Home score is required'),
-									Forms.Validators.patternMatch(
-										/^\d+$/,
-										'Score must be a number'
-									) }
+						validators={[
+							Forms.Validators.required('Home score is required'),
+							Forms.Validators.patternMatch(
+								/^\d+$/,
+								'Score must be a number'
+							),
+							self.scoresMustBeUnique.bind(self)
+						]}
 					/>
 				</div>
 				<div className="field-row">
@@ -147,7 +184,15 @@ class AddMatchResult extends React.Component {
 						value={self.state.away_player}
 						onChange={self.handleAwayPlayerChange.bind(self)}
 						required aria-required="true"
-						validators={ Forms.Validators.required('Away player is required') }
+						validators={[
+							Forms.Validators.required(
+								'Away player is required',
+								{
+							        whitespace: Forms.Validators.whitespaceOptions.TRIM
+							    }
+							),
+							self.playerNamesMustBeUnique.bind(self)
+						]}
 					>
 						<option value={``}></option>
 					{
@@ -161,24 +206,31 @@ class AddMatchResult extends React.Component {
 					<label className="field-label field-label-required" for="asInput">
 						Away score
 		            </label>
-					<Forms.Input type="number" id="asInput" ref="awayScoreInput"
+					<Forms.Input type="number" min="0" id="asInput" ref="awayScoreInput"
 						value={self.state.away_score}
 						onChange={self.handleAwayScoreChange.bind(self)}
 						required aria-required="true"
-						validators={ Forms.Validators.required('Away score is required'),
-									Forms.Validators.patternMatch(
-										/^\d+$/,
-										'Score must be a number'
-									) }
+						validators={[
+							Forms.Validators.required('Away score is required'),
+							Forms.Validators.patternMatch(
+								/^\d+$/,
+								'Score must be a number'
+							),
+							self.scoresMustBeUnique.bind(self)
+						]}
 					/>
 				</div>
 				<div className="field-row">
-					<label className="checkbox-label">
-					    <input type="checkbox"
-							checked={self.state.overtime}
-							onChange={self.handleOvertimeChange.bind(self)}
-						/>Overtime
+					<label className="field-label" for="otInput">
+						Overtime
 					</label>
+				    <Forms.Input type="checkbox" id="otInput" ref="overtimeInput"
+						checked={self.state.overtime}
+						onChange={self.handleOvertimeChange.bind(self)}
+						validators={
+							self.overtimeRangeRestriction.bind(self)
+						}
+					/>
 				</div>
 				<button className="primary" onClick={self.addResult.bind(self)}>Add</button>
 				<p>{self.state.responseData}</p>

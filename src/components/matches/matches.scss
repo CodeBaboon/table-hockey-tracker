@@ -1,5 +1,3 @@
-@import "node_modules/vui-colors/colors.scss";
-
 table {
 	td {
 		span.winner {
@@ -11,4 +9,8 @@ table {
 			color: $vui-color-cinnabar;
 		}
 	}
+}
+
+#otInput {
+	float: left;
 }
