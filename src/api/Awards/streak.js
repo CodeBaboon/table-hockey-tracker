@@ -1,16 +1,21 @@
 
 function checkStreak(match, playerName, streaks) {
     let streak = streaks[playerName];
-       
+      
     if (!streak) {
         streaks[playerName] = {
             count: 1,
-            type: match.winner === playerName ? 'winning' : 'losing'
+            type: match.winner === playerName ? 'winning' : 'losing',
+            isOver: false
         };
+    } else if (streak.isOver) {
+        // do nothing
     } else if (streak.type === 'winning' && match.winner === playerName) {
         streak.count += 1;
     } else if (streak.type === 'losing' && match.loser === playerName) {
         streak.count += 1;
+    } else {
+        streak.isOver = true;
     }
 }
 
