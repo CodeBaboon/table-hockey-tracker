@@ -4,11 +4,11 @@
   "description": "Track and display results for D2L Winnipeg table hockey games",
   "main": "app.js",
   "scripts": {
-    "prebuild": "rimraf ./dist && mkdirp ./dist && mkdirp ./dist/api && mkdirp ./dist/lib && mkdirp ./dist/views && mkdirp ./dist/static && cp ./src/views/* ./dist/views/ && cp ./src/app-server.js ./dist/app-server.js && cp ./src/api/* ./dist/api/ && cp ./src/lib/* ./dist/lib/",
+    "prebuild": "rimraf ./dist && mkdirp ./dist && mkdirp ./dist/api && mkdirp ./dist/lib && mkdirp ./dist/views && mkdirp ./dist/static && cp ./src/views/* ./dist/views/ && cp ./src/app-server.js ./dist/app-server.js && cp -R ./src/api/* ./dist/api/ && cp ./src/lib/* ./dist/lib/",
     "build:client": "browserify src/app-client.js -o dist/static/app-client.js && node-sass --importer ./node_modules/frau-sass-importer/ src/app-client.scss dist/static/app-client.css",
     "build": "npm run build:client",
     "start:build": "npm run build",
-    "start:executeLocal": "PORT=3099 node_modules/nodemon/bin/nodemon.js -- node_modules/babel-cli/bin/babel-node.js dist/app-server.js",
+    "start:executeLocal": "nodemon -- ./node_modules/babel-cli/bin/babel-node.js ./dist/app-server.js",
     "start:execute": "node_modules/babel-cli/bin/babel-node.js dist/app-server.js",
     "start": "npm run start:build && npm run start:execute",
     "startLocal": "npm run start:build && npm run start:executeLocal",
