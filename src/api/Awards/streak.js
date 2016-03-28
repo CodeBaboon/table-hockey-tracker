@@ -1,3 +1,4 @@
+import moment from 'moment';
 
 function checkStreak(match, playerName, streaks) {
     let streak = streaks[playerName];
@@ -19,10 +20,32 @@ function checkStreak(match, playerName, streaks) {
     }
 }
 
-// Assumes match results are sorted with most recent games first
+function compareMatchResults(result1, result2) {
+    const date1 = moment(result1.played_on);
+    const date2 = moment(result2.played_on);
+    
+    if (!date1.isValid() || !date2.isValid()) {
+        throw new Error();
+    }
+
+    if (date1.isAfter(date2)) {
+        return -1;
+    } else if (date1.isBefore(date2)) {
+        return 1;
+    } else if (result1.id > result2.id) {
+        return -1;
+    } else if (result1.id < result2.id) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 function calculate(matchResults) {
     const awards = [];
     let streaks = {};
+    
+    matchResults.sort(compareMatchResults);
     
     matchResults.forEach((match) => {
         checkStreak(match, match.home_player, streaks);
