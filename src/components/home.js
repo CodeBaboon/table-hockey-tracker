@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import Standings from './standings/index';
+import Awards from './awards/index';
 
 class Home extends React.Component {
 
@@ -18,6 +19,7 @@ class Home extends React.Component {
 				</header>
 				<main>
 					<Standings {...this.props} />
+                    <Awards {...this.props} />
 				</main>
 			</div>
     	);

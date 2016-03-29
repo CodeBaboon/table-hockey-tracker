@@ -7,6 +7,7 @@ import views from 'koa-views';
 import pg from 'koa-pg';
 import Standings from './api/standings';
 import Matches from './api/matches';
+import Awards from './api/awards';
 
 const app = koa();
 
@@ -27,6 +28,7 @@ app.use(pg({
 app.use(route.get('/api/standings/', Standings.list));
 app.use(route.get('/api/matches/', Matches.list));
 app.use(route.post('/api/matches/', Matches.add));
+app.use(route.get('/api/awards/', Awards.list));
 app.use(route.get('*', home));
 
 function *home() {
