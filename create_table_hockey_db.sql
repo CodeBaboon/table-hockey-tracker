@@ -29,6 +29,94 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 SET search_path = public, pg_catalog;
 
+--
+-- Name: getstandingsperopponent(text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION getstandingsperopponent(text) RETURNS TABLE(player text, opponent text, home_wins bigint, away_wins bigint, home_losses bigint, away_losses bigint, total_wins bigint, total_losses bigint)
+    LANGUAGE sql
+    AS $_$
+
+
+SELECT CASE
+			WHEN all_wins.player IS NOT NULL THEN all_wins.player
+			ELSE all_losses.player
+		END AS player,
+		CASE
+			WHEN all_wins.opponent IS NOT NULL THEN all_wins.opponent
+			ELSE all_losses.opponent
+		END AS opponent,
+		COALESCE(all_wins.home_wins, 0) AS home_wins,
+		COALESCE(all_wins.away_wins, 0) AS away_wins,
+		COALESCE(all_losses.home_losses, 0) AS home_losses,
+		COALESCE(all_losses.away_losses, 0) AS away_losses,
+		COALESCE(all_wins.total_wins, 0) AS total_wins,
+		COALESCE(all_losses.total_losses, 0) AS total_losses
+FROM
+	(SELECT CASE
+				WHEN home_wins.player IS NOT NULL THEN home_wins.player
+				ELSE away_wins.player
+			END AS player,
+	       CASE
+	       		WHEN home_wins.opponent IS NOT NULL THEN home_wins.opponent
+	       		ELSE away_wins.opponent
+	       	END AS opponent,
+			home_wins.wins AS home_wins,
+			away_wins.wins AS away_wins,
+			COALESCE(home_wins.wins, 0) + COALESCE(away_wins.wins, 0) AS total_wins
+	FROM
+		(SELECT mrv.home_player AS player
+		, mrv.away_player AS opponent
+		, count(mrv.winner) AS wins
+		FROM match_results_view mrv
+		GROUP BY mrv.home_player, mrv.away_player, mrv.winner
+		HAVING mrv.home_player = $1
+		   AND mrv.home_player = mrv.winner) home_wins
+		FULL JOIN
+		(SELECT mrv.away_player AS player
+		, mrv.home_player AS opponent
+		, count(mrv.winner) AS wins
+		FROM match_results_view mrv
+		GROUP BY mrv.home_player, mrv.away_player, mrv.winner
+		HAVING mrv.away_player = $1
+		   AND mrv.away_player = mrv.winner) away_wins ON home_wins.opponent = away_wins.opponent) all_wins
+
+FULL JOIN
+
+(SELECT CASE
+			WHEN home_losses.player IS NOT NULL THEN home_losses.player
+			ELSE away_losses.player
+		END AS player,
+       CASE
+       		WHEN home_losses.opponent IS NOT NULL THEN home_losses.opponent
+       		ELSE away_losses.opponent
+       	END AS opponent,
+		home_losses.losses AS home_losses,
+		away_losses.losses AS away_losses,
+		COALESCE(home_losses.losses,0) + COALESCE(away_losses.losses, 0) AS total_losses
+FROM
+(SELECT mrv.home_player AS player
+, mrv.away_player AS opponent
+, count(mrv.loser) AS losses
+FROM match_results_view mrv
+GROUP BY mrv.home_player, mrv.away_player, mrv.loser
+HAVING mrv.home_player = $1
+   AND mrv.home_player = mrv.loser) home_losses
+FULL JOIN
+(SELECT mrv.away_player AS player
+, mrv.home_player AS opponent
+, count(mrv.loser) AS losses
+FROM match_results_view mrv
+GROUP BY mrv.home_player, mrv.away_player, mrv.loser
+HAVING mrv.away_player = $1
+   AND mrv.away_player = mrv.loser) away_losses ON home_losses.opponent = away_losses.opponent) all_losses
+
+ON all_wins.opponent = all_losses.opponent
+
+
+    $_$;
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -69,7 +157,7 @@ CREATE VIEW match_results_view AS
             ELSE match_results.away_player
         END AS loser
    FROM match_results
-   ORDER BY match_results.played_on DESC, match_results.id DESC;
+  ORDER BY match_results.played_on DESC, match_results.id DESC;
 
 
 --

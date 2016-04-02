@@ -8,7 +8,7 @@
     "build:client": "browserify src/app-client.js -o dist/static/app-client.js && node-sass --importer ./node_modules/frau-sass-importer/ src/app-client.scss dist/static/app-client.css",
     "build": "npm run build:client",
     "start:build": "npm run build",
-    "start:executeLocal": "nodemon -- ./node_modules/babel-cli/bin/babel-node.js ./dist/app-server.js",
+    "start:executeLocal": "npm run build && nodemon -- ./node_modules/babel-cli/bin/babel-node.js ./dist/app-server.js",
     "start:execute": "node_modules/babel-cli/bin/babel-node.js dist/app-server.js",
     "start": "npm run start:build && npm run start:execute",
     "startLocal": "npm run start:build && npm run start:executeLocal",

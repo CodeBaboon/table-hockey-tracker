@@ -1,21 +1,24 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 class Record extends React.Component {
 	render() {
-
-		const gfpg = this.props.data.total_goals_for / this.props.data.games_played;
-		const gapg = this.props.data.total_goals_against / this.props.data.games_played;
+		const data = this.props.data;
+		const gfpg = data.total_goals_for / data.games_played;
+		const gapg = data.total_goals_against / data.games_played;
+		const player = data.player;
+		const playerUrl = `players/${player}`;
 
 		return (
 			<tr>
-				<td>{this.props.data.player}</td>
-				<td>{this.props.data.games_played}</td>
-				<td>{this.props.data.wins}</td>
-				<td>{this.props.data.losses}</td>
-				<td className='detailed-info'>{this.props.data.win_percentage}</td>
+				<td><Link to={playerUrl}>{player}</Link></td>
+				<td>{data.games_played}</td>
+				<td>{data.wins}</td>
+				<td>{data.losses}</td>
+				<td className='detailed-info'>{data.win_percentage}</td>
 				<td className='detailed-info'>{gfpg.toFixed(2)}</td>
 				<td className='detailed-info'>{gapg.toFixed(2)}</td>
-				<td className='detailed-info'>{this.props.data.total_goals_diff}</td>
+				<td className='detailed-info'>{data.total_goals_diff}</td>
 			</tr>
 		);
 	}

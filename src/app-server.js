@@ -26,6 +26,7 @@ app.use(pg({
 }));
 
 app.use(route.get('/api/standings/', Standings.list));
+app.use(route.get('/api/standings/:player', Standings.perOpponent));
 app.use(route.get('/api/matches/', Matches.list));
 app.use(route.post('/api/matches/', Matches.add));
 app.use(route.get('/api/awards/', Awards.list));
