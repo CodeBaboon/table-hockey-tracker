@@ -9,7 +9,7 @@ class Home extends React.Component {
 		return (
 			<div>
 				<header>
-					<Navigation {...this.props} />
+					<Navigation {...this.props} selectedItem="Home" />
 				</header>
 				<main>
 					<Standings {...this.props} />

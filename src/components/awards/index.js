@@ -27,13 +27,13 @@ class Awards extends React.Component {
         if (!data || !data.records || data.records.length === 0) {
             return null;
         }
-        
+
 		return (
 			<div>
                 <h2>Awards</h2>
                 {
-                    data.records.map((record) => {
-                        return <Award record={record} />
+                    data.records.map((record, index) => {
+                        return <Award key={index} record={record} />
                     })
                 }
 			</div>
