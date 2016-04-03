@@ -26,7 +26,7 @@ class Matches extends React.Component {
 		return (
 			<div>
 				<header>
-					<Navigation {...this.props} />
+					<Navigation {...this.props} selectedItem="Matches" />
 				</header>
 				<main>
 					<h1>Matches</h1>

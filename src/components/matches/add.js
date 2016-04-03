@@ -133,7 +133,7 @@ class AddMatchResult extends React.Component {
 		return (
 			<div>
 				<header>
-					<Navigation {...this.props} />
+					<Navigation {...this.props} selectedItem="Add" />
 				</header>
 				<main>
 					<h1>Add a match result</h1>

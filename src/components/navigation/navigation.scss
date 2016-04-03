@@ -1,0 +1,93 @@
+@import url("http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
+
+$mobileScreenWidth: 767px;
+
+nav {
+	ul {
+		position: fixed;
+		top: 0;
+		display: flex;
+		flex: 1;
+		flex-wrap: wrap;
+		width: 100%;
+		margin: 0;
+		padding-left: 0;
+		background-color: $vui-color-celestuba;
+	}
+	li {
+		flex: 1;
+		text-align: center;
+
+		a.nav-link {
+			color: $vui-color-white;
+			display: block;
+			padding: 8px;
+		}
+	}
+
+	li.selected {
+		background-color: $vui-color-white;
+
+		a.nav-link {
+			color: $vui-color-celestuba;
+		}
+	}
+
+	input.nav-toggle,
+	label {
+		display: none;
+		width: 36px;
+		height: 36px;
+		color: $vui-color-celestuba;
+		text-align: center;
+		line-height: 36px;
+		font-size: 1.6rem;
+		border-radius: 4px;
+	}
+
+	input[type="checkbox"]:checked ~ label {
+		color: $vui-color-white;
+	}
+
+	label {
+		position: fixed;
+		top: 8px;
+		left: 8px;
+		transition: .4s;
+
+		&:hover {
+			cursor:pointer;
+		}
+
+		&:before {
+			font-family: FontAwesome;
+			font-size: 24px;
+			content: "\f0c9";
+			text-align: center;
+		}
+	}
+
+	@media screen and (max-device-width: $mobileScreenWidth), screen and (max-width: $mobileScreenWidth) {
+		ul {
+			display: none;
+		}
+		li {
+			flex: none;
+			width: 100%;
+		}
+		li.selected {
+			background-color: $vui-color-celestuba;
+
+			a.nav-link {
+				color: $vui-color-white;
+			}
+		}
+		input[type="checkbox"]:checked + ul {
+			display: block;
+			width: 100%;
+		}
+		label {
+			display: block;
+		}
+	}
+}

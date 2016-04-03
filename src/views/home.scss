@@ -1,8 +1,12 @@
 @import "node_modules/react-vui-forms/forms.scss";
 @import "node_modules/vui-table/table.scss";
+@import "node_modules/vui-list/list.scss";
+@import "node_modules/vui-list/list-item.scss";
+@import "../components/navigation/navigation.scss";
 @import "../components/matches/matches.scss";
 @import "../components/awards/awards.scss";
 
+$navHeight: 60px;
 $mobileScreenWidth: 767px;
 
 table {
@@ -11,6 +15,16 @@ table {
 	caption {
 		text-align: left;
 	}
+}
+
+ul {
+    @include vui-list;
+	@include vui-list-no-separator;
+}
+
+main {
+	max-width: 1200px;
+	margin: $navHeight 40px;
 }
 
 @media screen and (max-device-width: $mobileScreenWidth), screen and (max-width: $mobileScreenWidth) {

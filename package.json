@@ -49,6 +49,7 @@
     "vui-grid-system": "0.0.1",
     "vui-input": "^1.5.5",
     "vui-link": "^1.1.1",
+    "vui-list": "^1.0.1",
     "vui-table": "0.0.10",
     "vui-typography": "^2.0.2"
   },

@@ -26,7 +26,7 @@ class Players extends React.Component
 		return (
 			<div>
 				<header>
-					<Navigation {...this.props} />
+					<Navigation {...this.props} selectedItem="Players" />
 				</header>
 				<main>
 					<h1>Player List</h1>

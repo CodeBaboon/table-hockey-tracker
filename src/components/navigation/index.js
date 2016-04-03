@@ -1,18 +1,25 @@
 import React from 'react';
-import { Link } from 'react-router';
+import Item from './item';
 
 class Navigation extends React.Component {
+
+	constructor(props) {
+		super(props);
+		this.state = { data: null };
+	}
 
 	render() {
 		return (
 			<div>
 				<nav>
+					<input className="nav-toggle" type="checkbox" id="css-toggle-menu" name="css-toggle-menu"></input>
 					<ul>
-						<li><Link to="/"><h1>D2L Table Hockey</h1></Link></li>
-						<li><Link to="/players">View player list</Link></li>
-						<li><Link to="/matches">View match results</Link></li>
-						<li><Link to="/matches/add">Add match result</Link></li>
+						<Item selected={this.props.selectedItem === `Home`} to="/" title="Home" />
+						<Item selected={this.props.selectedItem === `Players`} to="/players" title="Players" />
+						<Item selected={this.props.selectedItem === `Matches`} to="/matches" title="Matches" />
+						<Item selected={this.props.selectedItem === `Add`} to="/matches/add" title="Add" />
 					</ul>
+					<label htmlFor="css-toggle-menu" id="css-toggle-menu"></label>
 				</nav>
 			</div>
     	);
