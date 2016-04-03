@@ -8,6 +8,7 @@ import pg from 'koa-pg';
 import Standings from './api/standings';
 import Matches from './api/matches';
 import Awards from './api/awards';
+import Players from './api/players';
 
 const app = koa();
 
@@ -30,6 +31,7 @@ app.use(route.get('/api/standings/:player', Standings.perOpponent));
 app.use(route.get('/api/matches/', Matches.list));
 app.use(route.post('/api/matches/', Matches.add));
 app.use(route.get('/api/awards/', Awards.list));
+app.use(route.get('/api/players/', Players.list));
 app.use(route.get('*', home));
 
 function *home() {

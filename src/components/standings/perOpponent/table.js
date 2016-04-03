@@ -20,7 +20,7 @@ class StandingsPerOpponentTable extends React.Component {
 			return (
 				<div>
 					<h2>No per-opponent standings to display</h2>
-					<p>You know nothing, {this.props.params.name}. Play the game of thr--- uhh, table hockey, then <Link to="matches/add">add some results</Link>.</p>
+					<p>You know nothing, {this.props.params.name}. Play the game of thr--- uhh, table hockey, then <Link to="/matches/add">add some results</Link>.</p>
 				</div>
 			);
 		}
