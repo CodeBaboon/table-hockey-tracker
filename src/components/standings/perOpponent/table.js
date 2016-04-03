@@ -25,8 +25,6 @@ class StandingsPerOpponentTable extends React.Component {
 			);
 		}
 
-		console.log('records are ', data.records);
-
 		return (
 			<div>
 				<table summary="Wins, losses, and other overall summary data related to player vs player matches">
@@ -37,6 +35,10 @@ class StandingsPerOpponentTable extends React.Component {
 							<th>GP</th>
 							<th>Wins</th>
 							<th>Losses</th>
+							<th className='detailed-info'>Win %</th>
+							<th className='detailed-info'>GFPG</th>
+							<th className='detailed-info'>GAPG</th>
+							<th className='detailed-info'>Diff</th>
 						</tr>
 					</thead>
 					<tbody>
