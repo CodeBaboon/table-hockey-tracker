@@ -13,7 +13,7 @@ class StandingsPerOpponent extends React.Component
 	componentWillMount() {
 		const self = this;
 
-		request.get(`/api/standings/${this.props.params.name}`)
+		request.get(`/api/players/${this.props.params.name}/standings/opponent`)
 				.use(promisify)
 				.promise()
 				.then(function(response) {

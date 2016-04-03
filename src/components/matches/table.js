@@ -11,6 +11,8 @@ class MatchesTable extends React.Component {
 
 	render() {
 		let data = this.props.data;
+		let caption = this.props.caption || `Match Results`;
+		let summary = this.props.summary || `List of matches`;
 
 		if (!data || !data.records) {
 			return <div><p>loading...</p></div>;
@@ -27,8 +29,8 @@ class MatchesTable extends React.Component {
 
 		return (
 			<div>
-				<table className="match-results" summary="Full list of all matches recorded to date">
-					<caption>All Match Results</caption>
+				<table className="match-results" summary={summary}>
+					<caption>{caption}</caption>
 					<thead>
 						<tr>
 							<th>Id</th>
