@@ -17,11 +17,25 @@ function getCurrentDate() {
 }
 
 class Matches {
-	static *list(next) {
+	static *list(limit, next) {
 		if ('GET' != this.method) return yield next;
 
-		const query = 'SELECT id, home_player, home_score, away_player, away_score, overtime, played_on, winner, loser FROM match_results_view';
-		const result = yield this.pg.db.client.query_(query);
+		let query = `SELECT id
+                            , home_player
+                            , home_score
+                            , away_player
+                            , away_score
+                            , overtime
+                            , played_on
+                            , winner
+                            , loser
+                        FROM match_results_view`;
+
+        if (!isNaN(limit)) {
+            query += ` LIMIT ${limit}`;
+        }
+
+        const result = yield this.pg.db.client.query_(query);
 		this.body = {
 			records: result.rows
 		};
@@ -49,6 +63,35 @@ class Matches {
 			}
 			this.body = 'Match result added';
 		}
+	}
+
+	static *byPlayer(player, limit, next) {
+		if ('GET' != this.method) return yield next;
+
+		let query = `SELECT id
+							, home_player
+							, home_score
+							, away_player
+							, away_score
+							, overtime
+							, played_on
+							, winner
+							, loser
+						FROM match_results_view
+						WHERE winner = '${player}'
+						   OR loser = '${player}'
+						ORDER BY played_on DESC
+								, id DESC`;
+
+        if (!isNaN(limit)) {
+            query += ` LIMIT ${limit}`;
+        }
+
+		const result = yield this.pg.db.client.query_(query);
+
+		this.body = {
+			records: result.rows
+		};
 	}
 }
 

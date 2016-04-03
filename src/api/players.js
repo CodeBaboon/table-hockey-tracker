@@ -1,5 +1,7 @@
 class Players {
-	static *list() {
+	static *list(next) {
+		if ('GET' != this.method) return yield next;
+
 		const query = `SELECT DISTINCT winner as player
 						FROM match_results_view
 					   	UNION

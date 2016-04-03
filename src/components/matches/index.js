@@ -23,6 +23,9 @@ class Matches extends React.Component {
 	}
 
 	render() {
+		const caption = `All Match Results`;
+		const summary = `Full list of all matches recorded to date`;
+
 		return (
 			<div>
 				<header>
@@ -30,7 +33,7 @@ class Matches extends React.Component {
 				</header>
 				<main>
 					<h1>Matches</h1>
-					<MatchesTable data={this.state.data} />
+					<MatchesTable data={this.state.data} caption={caption} summary={summary} />
 				</main>
 			</div>
 		);

@@ -27,11 +27,12 @@ app.use(pg({
 }));
 
 app.use(route.get('/api/standings/', Standings.list));
-app.use(route.get('/api/standings/:player', Standings.perOpponent));
-app.use(route.get('/api/matches/', Matches.list));
+app.use(route.get('/api/matches/:limit?', Matches.list));
 app.use(route.post('/api/matches/', Matches.add));
 app.use(route.get('/api/awards/', Awards.list));
 app.use(route.get('/api/players/', Players.list));
+app.use(route.get('/api/players/:player/standings/opponent', Standings.perOpponent));
+app.use(route.get('/api/players/:player/matches/:limit?', Matches.byPlayer));
 app.use(route.get('*', home));
 
 function *home() {
