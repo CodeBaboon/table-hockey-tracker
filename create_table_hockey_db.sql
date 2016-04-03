@@ -33,10 +33,9 @@ SET search_path = public, pg_catalog;
 -- Name: getstandingsperopponent(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION getstandingsperopponent(text) RETURNS TABLE(player text, opponent text, home_wins bigint, away_wins bigint, home_losses bigint, away_losses bigint, total_wins bigint, total_losses bigint)
+CREATE FUNCTION getstandingsperopponent(text) RETURNS TABLE(player text, opponent text, games_played bigint, home_wins bigint, away_wins bigint, home_losses bigint, away_losses bigint, total_wins bigint, total_losses bigint, win_percentage numeric, goals_for bigint, goals_against bigint)
     LANGUAGE sql
     AS $_$
-
 
 SELECT CASE
 			WHEN all_wins.player IS NOT NULL THEN all_wins.player
@@ -46,14 +45,18 @@ SELECT CASE
 			WHEN all_wins.opponent IS NOT NULL THEN all_wins.opponent
 			ELSE all_losses.opponent
 		END AS opponent,
+		COALESCE(all_wins.total_wins, 0) + COALESCE(all_losses.total_losses, 0) AS games_played,
 		COALESCE(all_wins.home_wins, 0) AS home_wins,
 		COALESCE(all_wins.away_wins, 0) AS away_wins,
 		COALESCE(all_losses.home_losses, 0) AS home_losses,
 		COALESCE(all_losses.away_losses, 0) AS away_losses,
 		COALESCE(all_wins.total_wins, 0) AS total_wins,
-		COALESCE(all_losses.total_losses, 0) AS total_losses
+		COALESCE(all_losses.total_losses, 0) AS total_losses,
+		round(COALESCE(all_wins.total_wins, 0::bigint)::numeric * 1.0 / (COALESCE(all_wins.total_wins, 0::bigint) + COALESCE(all_losses.total_losses, 0::bigint))::numeric, 2) AS win_percentage,
+		COALESCE(all_wins.goals_for, 0) + COALESCE(all_losses.goals_for, 0) AS goals_for,
+		COALESCE(all_wins.goals_against, 0) + COALESCE(all_losses.goals_against, 0) AS goals_against
 FROM
-	(SELECT CASE
+	(SELECT CASE 
 				WHEN home_wins.player IS NOT NULL THEN home_wins.player
 				ELSE away_wins.player
 			END AS player,
@@ -63,11 +66,16 @@ FROM
 	       	END AS opponent,
 			home_wins.wins AS home_wins,
 			away_wins.wins AS away_wins,
-			COALESCE(home_wins.wins, 0) + COALESCE(away_wins.wins, 0) AS total_wins
+			COALESCE(home_wins.wins, 0) + COALESCE(away_wins.wins, 0) AS total_wins,
+			COALESCE(home_wins.goals_for,0) + COALESCE(away_wins.goals_for, 0) AS goals_for,
+			COALESCE(home_wins.goals_against,0) + COALESCE(away_wins.goals_against,0) AS goals_against
+			
 	FROM
 		(SELECT mrv.home_player AS player
 		, mrv.away_player AS opponent
 		, count(mrv.winner) AS wins
+		, sum(mrv.home_score) AS goals_for
+		, sum(mrv.away_score) AS goals_against
 		FROM match_results_view mrv
 		GROUP BY mrv.home_player, mrv.away_player, mrv.winner
 		HAVING mrv.home_player = $1
@@ -76,11 +84,13 @@ FROM
 		(SELECT mrv.away_player AS player
 		, mrv.home_player AS opponent
 		, count(mrv.winner) AS wins
+		, sum(mrv.away_score) AS goals_for
+		, sum(mrv.home_score) AS goals_against
 		FROM match_results_view mrv
 		GROUP BY mrv.home_player, mrv.away_player, mrv.winner
 		HAVING mrv.away_player = $1
 		   AND mrv.away_player = mrv.winner) away_wins ON home_wins.opponent = away_wins.opponent) all_wins
-
+   
 FULL JOIN
 
 (SELECT CASE
@@ -93,11 +103,15 @@ FULL JOIN
        	END AS opponent,
 		home_losses.losses AS home_losses,
 		away_losses.losses AS away_losses,
-		COALESCE(home_losses.losses,0) + COALESCE(away_losses.losses, 0) AS total_losses
+		COALESCE(home_losses.losses,0) + COALESCE(away_losses.losses, 0) AS total_losses,
+		COALESCE(home_losses.goals_for,0) + COALESCE(away_losses.goals_for, 0) AS goals_for,
+		COALESCE(home_losses.goals_against,0) + COALESCE(away_losses.goals_against,0) AS goals_against
 FROM
 (SELECT mrv.home_player AS player
 , mrv.away_player AS opponent
 , count(mrv.loser) AS losses
+		, sum(mrv.home_score) AS goals_for
+		, sum(mrv.away_score) AS goals_against
 FROM match_results_view mrv
 GROUP BY mrv.home_player, mrv.away_player, mrv.loser
 HAVING mrv.home_player = $1
@@ -106,12 +120,15 @@ FULL JOIN
 (SELECT mrv.away_player AS player
 , mrv.home_player AS opponent
 , count(mrv.loser) AS losses
+		, sum(mrv.away_score) AS goals_for
+		, sum(mrv.home_score) AS goals_against
 FROM match_results_view mrv
 GROUP BY mrv.home_player, mrv.away_player, mrv.loser
 HAVING mrv.away_player = $1
-   AND mrv.away_player = mrv.loser) away_losses ON home_losses.opponent = away_losses.opponent) all_losses
-
+   AND mrv.away_player = mrv.loser) away_losses ON home_losses.opponent = away_losses.opponent) all_losses 
+   
 ON all_wins.opponent = all_losses.opponent
+ORDER BY win_percentage DESC, total_wins DESC, total_losses DESC
 
 
     $_$;
@@ -297,3 +314,4 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
+

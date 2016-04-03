@@ -26,12 +26,16 @@ class Standings {
 	static *perOpponent(player) {
 		const query = `SELECT player
 							, opponent
+							, games_played
 							, home_wins
 							, away_wins
 							, home_losses
 							, away_losses
 							, total_wins
 							, total_losses
+							, win_percentage
+							, goals_for
+							, goals_against
 						FROM getStandingsPerOpponent('${player}')`;
 		const result = yield this.pg.db.client.query_(query);
 		this.body = {
