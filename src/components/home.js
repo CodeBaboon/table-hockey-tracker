@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import Navigation from './navigation/index';
 import Standings from './standings/index';
 import Awards from './awards/index';
 
@@ -9,13 +9,7 @@ class Home extends React.Component {
 		return (
 			<div>
 				<header>
-					<h1>D2L Table Hockey</h1>
-					<nav>
-						<ul>
-							<li><Link to="matches">View match results</Link></li>
-							<li><Link to="matches/add">Add match result</Link></li>
-						</ul>
-					</nav>
+					<Navigation {...this.props} />
 				</header>
 				<main>
 					<Standings {...this.props} />

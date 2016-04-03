@@ -7,7 +7,7 @@ class Record extends React.Component {
 		const gfpg = data.total_goals_for / data.games_played;
 		const gapg = data.total_goals_against / data.games_played;
 		const player = data.player;
-		const playerUrl = `players/${player}`;
+		const playerUrl = `/players/${player}`;
 
 		return (
 			<tr>

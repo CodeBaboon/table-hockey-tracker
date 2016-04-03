@@ -20,7 +20,7 @@ class StandingsTable extends React.Component {
 			return (
 				<div>
 					<h2>No standings to display</h2>
-					<p>You know nothing, Jon Snow. Play the game of thr--- uhh, table hockey, then <Link to="matches/add">add some results</Link>.</p>
+					<p>You know nothing, Jon Snow. Play the game of thr--- uhh, table hockey, then <Link to="/matches/add">add some results</Link>.</p>
 				</div>
 			);
 		}

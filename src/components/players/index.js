@@ -1,22 +1,40 @@
 import React from 'react';
-import StandingsPerOpponent from '../standings/perOpponent/index';
+import Navigation from '../navigation/index';
+import PlayersList from './list';
+import request from 'superagent';
+import { promisify } from '../../lib/promisify';
 
-class Player extends React.Component
+class Players extends React.Component
 {
 	constructor(props) {
 		super(props);
 		this.state = { data: null };
 	}
 
+	componentWillMount() {
+		const self = this;
+
+		request.get('/api/players')
+				.use(promisify)
+				.promise()
+				.then(function(response) {
+					self.setState({ data: response.body });
+				});
+	}
+
 	render() {
-		const title = `${this.props.params.name}'s Page`;
 		return (
 			<div>
-				<h1>{title}</h1>
-				<StandingsPerOpponent {...this.props} />
+				<header>
+					<Navigation {...this.props} />
+				</header>
+				<main>
+					<h1>Player List</h1>
+					<PlayersList data={this.state.data} />
+				</main>
 			</div>
 		);
 	}
 }
 
-export default Player;
+export default Players;

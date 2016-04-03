@@ -20,7 +20,7 @@ class MatchesTable extends React.Component {
 			return (
 				<div>
 					<h2>No match results to display</h2>
-					<p>Maybe you should get playing and then <Link to="matches/add">add one</Link>?</p>
+					<p>Maybe you should get playing and then <Link to="/matches/add">add one</Link>?</p>
 				</div>
 			);
 		}
