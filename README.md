@@ -24,7 +24,7 @@ Finally, kick things off:
 npm run startLocal
 ```
 
-You should then be able to access the site at `http://localhost:3099`
+You should then be able to access the site at `http://localhost:3000`
 
 ## Database Changes
 
