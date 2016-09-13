@@ -20,20 +20,6 @@ class AddMatchResult extends React.Component {
 		};
 	}
 
-	getPlayers() {
-		return [
-			'Christian',
-			'Bob',
-			'Joel',
-			'Jeff',
-			'Dave',
-			'Steve',
-			'Adam',
-			'Suneet',
-			'Waiki'
-		];
-	}
-
 	getInputData() {
 		const self = this;
 		return {
@@ -127,7 +113,13 @@ class AddMatchResult extends React.Component {
 
 	componentWillMount() {
 		const self = this;
-		this.setState({ players: self.getPlayers() });
+
+		request.get('/api/players')
+				.use(promisify)
+				.promise()
+				.then(function(response) {
+					self.setState({ players: response.body.records });
+				});
 	}
 
 	render() {
@@ -159,8 +151,11 @@ class AddMatchResult extends React.Component {
 						>
 							<option value={``}></option>
 						{
-							self.state.players.map((player, index) => {
-								return <option key={`hp${index}`} value={player}>{player}</option>;
+							self.state.players
+								.filter(player => player.is_active)
+								.map((player, index) => {
+									console.log(player.name);
+									return <option key={`hp${index}`} value={player.name}>{player.name}</option>;
 							})
 						}
 						</Forms.Select>
@@ -203,8 +198,10 @@ class AddMatchResult extends React.Component {
 						>
 							<option value={``}></option>
 						{
-							self.state.players.map((player, index) => {
-								return <option key={`ap${index}`} value={player}>{player}</option>;
+							self.state.players
+								.filter(player => player.is_active)
+								.map((player, index) => {
+									return <option key={`ap${index}`} value={player.name}>{player.name}</option>;
 							})
 						}
 						</Forms.Select>

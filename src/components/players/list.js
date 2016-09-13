@@ -8,8 +8,22 @@ class PlayersList extends React.Component {
 	  this.state = {};
 	}
 
+	renderList(records, filter) {
+		return (
+			<ul>
+			{
+				records
+					.filter(filter)
+					.map((record, index) => {
+						const playerUrl = `/players/${record.name}`;
+						return <li key={index}><Link to={playerUrl}>{record.name}</Link></li>;
+				})
+			}
+			</ul>);
+	}
+
 	render() {
-		let data = this.props.data;
+		const data = this.props.data;
 
 		if (!data || !data.records) {
 			return <div><p>loading...</p></div>;
@@ -24,18 +38,12 @@ class PlayersList extends React.Component {
 			);
 		}
 
-
-
 		return (
 			<div>
-				<ul>
-				{
-					data.records.map((record, index) => {
-						const playerUrl = `/players/${record.player}`;
-						return <li key={index}><Link to={playerUrl}>{record.player}</Link></li>;
-					})
-				}
-				</ul>
+				<h2>Active</h2>
+				{this.renderList(data.records, (player) => player.is_active)}
+				<h2>Retired</h2>
+				{this.renderList(data.records, (player) => !player.is_active)}
 			</div>
 		);
 	}

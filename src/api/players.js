@@ -2,12 +2,10 @@ class Players {
 	static *list(next) {
 		if ('GET' != this.method) return yield next;
 
-		const query = `SELECT DISTINCT winner as player
-						FROM match_results_view
-					   	UNION
-						SELECT DISTINCT loser as player
-						FROM match_results_view
-						ORDER BY player`;
+		const query = `SELECT players.name as name
+						, players.is_active as is_active
+						FROM players
+					   	ORDER BY players.name`;
 		const result = yield this.pg.db.client.query_(query);
 
 		this.body = {
