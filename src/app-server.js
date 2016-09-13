@@ -2,7 +2,7 @@ import koa from 'koa';
 import bodyparser from 'koa-bodyparser';
 import route from 'koa-route';
 import mount from 'koa-mount';
-import serve from 'koa-static'
+import serve from 'koa-static';
 import views from 'koa-views';
 import pg from 'koa-pg';
 import Standings from './api/standings';

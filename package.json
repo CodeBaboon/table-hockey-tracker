@@ -2,7 +2,7 @@
   "name": "d2l-table-hockey-tracker",
   "version": "1.0.0",
   "description": "Track and display results for D2L Winnipeg table hockey games",
-  "main": "app.js",
+  "main": "app-server.js",
   "scripts": {
     "prebuild": "rimraf ./dist && mkdirp ./dist && mkdirp ./dist/api && mkdirp ./dist/lib && mkdirp ./dist/views && mkdirp ./dist/static && cp ./src/views/* ./dist/views/ && cp ./src/app-server.js ./dist/app-server.js && cp -R ./src/api/* ./dist/api/ && cp ./src/lib/* ./dist/lib/",
     "build:client": "browserify src/app-client.js -o dist/static/app-client.js && node-sass --importer ./node_modules/frau-sass-importer/ src/app-client.scss dist/static/app-client.css",

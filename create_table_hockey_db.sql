@@ -287,6 +287,16 @@ ALTER SEQUENCE match_results_id_seq OWNED BY match_results.id;
 
 
 --
+-- Name: players; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE players (
+    name text NOT NULL,
+    is_active boolean DEFAULT true NOT NULL
+);
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -299,6 +309,14 @@ ALTER TABLE ONLY match_results ALTER COLUMN id SET DEFAULT nextval('match_result
 
 ALTER TABLE ONLY match_results
     ADD CONSTRAINT match_results_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: players_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY players
+    ADD CONSTRAINT players_pkey PRIMARY KEY (name);
 
 
 --
