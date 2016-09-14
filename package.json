@@ -40,7 +40,7 @@
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-router": "^2.0.1",
-    "react-vui-forms": "^1.1.0",
+    "react-vui-forms": "https://github.com/CodeBaboon/react-valence-ui-forms.git#react-upgrade",
     "rimraf": "^2.5.2",
     "superagent": "^1.8.1",
     "vui-button": "^1.2.1",
