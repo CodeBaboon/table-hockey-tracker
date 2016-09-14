@@ -1,0 +1,17 @@
+sudo: false
+language: node_js
+node_js:
+- 4.5
+after_success:
+- npm run report-cov
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: TOTALLYNEEDAVALUEHERE
+  secret_access_key:
+    secure: THISISANENCRYPTEDVALUE
+  region: us-east-1
+  app: dharris-sandbox
+  env: dharrisSandbox-env
+  bucket_name: dharris-sandbox
+  on:
+    repo: CodeBaboon/table-hockey-tracker
