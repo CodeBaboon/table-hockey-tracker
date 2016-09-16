@@ -5,8 +5,7 @@ class Healthcheck {
 		console.log('db url is ', process.env.DATABASE_URL);
 
 		this.body = {
-			status: 'alive! woohoo!',
-			database_url: process.env.DATABASE_URL || 'undefined'
+			status: 'alive! woohoo!'
 		};
 	}
 }
