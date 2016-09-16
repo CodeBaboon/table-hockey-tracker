@@ -5,6 +5,7 @@ import mount from 'koa-mount';
 import serve from 'koa-static';
 import views from 'koa-views';
 import pg from 'koa-pg';
+import Healthcheck from './api/healthcheck';
 import Standings from './api/standings';
 import Matches from './api/matches';
 import Awards from './api/awards';
@@ -21,11 +22,14 @@ app.use(views(__dirname + '/views', {
   }
 }));
 
+console.log('db url is ', process.env.DATABASE_URL);
+
 app.use(pg({
     name: 'db',
     conStr: process.env.DATABASE_URL
 }));
 
+app.use(route.get('/api/healthcheck/', Healthcheck.list));
 app.use(route.get('/api/standings/', Standings.list));
 app.use(route.get('/api/matches/:limit?', Matches.list));
 app.use(route.post('/api/matches/', Matches.add));
