@@ -154,7 +154,6 @@ class AddMatchResult extends React.Component {
 							self.state.players
 								.filter(player => player.is_active)
 								.map((player, index) => {
-									console.log(player.name);
 									return <option key={`hp${index}`} value={player.name}>{player.name}</option>;
 							})
 						}
