@@ -68,3 +68,9 @@ pg_dump --schema-only --no-owner the_database > create_table_hockey_db.sql
 
 ##### `mkdirp \ rimraf`
 - File system utils
+
+##### `travis-ci`
+- Continuous integration testing and deploy
+
+##### `docker`
+- Container infrastructure for hosting
