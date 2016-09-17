@@ -17,8 +17,6 @@ class Player extends React.Component
 		const limit = 5;
 		const url = `/api/players/${this.props.params.name}/matches/${limit}`;
 
-		console.log('getting url ', url);
-
 		request.get(url)
 				.use(promisify)
 				.promise()

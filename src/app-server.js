@@ -22,8 +22,6 @@ app.use(views(__dirname + '/views', {
   }
 }));
 
-console.log('db url is ', process.env.DATABASE_URL);
-
 app.use(pg({
     name: 'db',
     conStr: process.env.DATABASE_URL
@@ -45,5 +43,4 @@ function *home() {
 
 const server = app.listen(process.env.PORT || 3000, () => {
 	const {address, port} = server.address();
-	console.log(`Example app listening at http://${address}:${port}`);
 });
